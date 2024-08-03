@@ -59,9 +59,9 @@ typing it by itself gives you a help, for what it can do.
 
 Step 1:
 
--   ✔︎ `nwgo` install
--   ✔︎ auto-download NWJS - Binaries on first run
-    -   ✔︎ for Mac (x86)
+-   ✅`nwgo` install
+-   ✅ auto-download NWJS - Binaries on first run
+    -   ✅ for Mac (arm)
     -   ▢ for Window
     -   ▢ for Linux (x86)
     -   ▢ for Linux (arm)
