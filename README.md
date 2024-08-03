@@ -23,9 +23,10 @@ Run the Install command.
 Sadly Gos `install` does not support changing the target binary name yet, so
 nwgo-cli comes with its own `install` command to compensate for that.
 
-run this command
+run this commands
 
 ```bash
+go mod tidy 
 go run . install
 ```
 
