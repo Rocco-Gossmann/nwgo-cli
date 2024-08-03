@@ -15,6 +15,8 @@ var absoluteBinPath = BIN_DEST
 
 var cobraHead = cobra.Command{
 
+	Use: "nwgo command",
+
 	RunE: func(cmd *cobra.Command, args []string) error {
 		//		if cmd.Flag("version").Value.String() == "true" {
 		//			fmt.Println(env.Version)
