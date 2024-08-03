@@ -12,14 +12,15 @@ import (
 
 func ZipExists(target string) bool {
 
-	zipfile, err := zip.OpenReader(target)
+	info, err := os.Stat(target)
 
-	if err != nil {
+	if os.IsNotExist(err) {
 		return false
-	} else {
-		zipfile.Close()
-		return true
 	}
+
+	go_utils.Err(err)
+
+	return true
 }
 
 func ExtractZip(inFile string, dstPath string) (didStuff bool, err error) {
