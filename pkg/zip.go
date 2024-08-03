@@ -1,7 +1,9 @@
 package pkg
 
 import (
+	"archive/tar"
 	"archive/zip"
+	"compress/gzip"
 	"fmt"
 	"io"
 	"os"
@@ -12,7 +14,7 @@ import (
 
 func ZipExists(target string) bool {
 
-	info, err := os.Stat(target)
+	_, err := os.Stat(target)
 
 	if os.IsNotExist(err) {
 		return false
@@ -21,6 +23,50 @@ func ZipExists(target string) bool {
 	go_utils.Err(err)
 
 	return true
+}
+
+func ExtractTarGZ(inFile string, dstPath string) (didStuff bool, err error) {
+
+	file, err := os.Open(inFile)
+	go_utils.Err(err)
+	defer file.Close()
+
+	gz, err := gzip.NewReader(file)
+	go_utils.Err(err)
+
+	tarReader := tar.NewReader(gz)
+
+	for {
+		tarItem, err := tarReader.Next()
+		if err == io.EOF {
+			break
+		}
+		go_utils.Err(err)
+
+		var item string = fmt.Sprintf("%s/%s", dstPath, tarItem.Name)
+
+		fmt.Print(CLEAR_CMD_LINE, "Extract: ", tarItem.Name)
+
+		switch tarItem.Typeflag {
+		case tar.TypeDir:
+			go_utils.Err(go_utils.MkDir(item))
+
+		case tar.TypeReg:
+			dir := filepath.Dir(item)
+			go_utils.Err(go_utils.MkDir(dir))
+
+			dstFile, err := os.OpenFile(item, os.O_CREATE|os.O_WRONLY, 0557)
+			go_utils.Err(err)
+			defer dstFile.Close()
+
+			_, err = io.Copy(dstFile, tarReader)
+			go_utils.Err(err)
+
+			didStuff = true
+		}
+	}
+
+	return
 }
 
 func ExtractZip(inFile string, dstPath string) (didStuff bool, err error) {

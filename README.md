@@ -65,7 +65,7 @@ Step 1:
     -   ✅ for Mac (arm)
     -   ▢ for Window
     -   ▢ for Linux (x86)
-    -   ▢ for Linux (arm)
+    -   ✅ for Linux (arm)
 
 Step 2:
 

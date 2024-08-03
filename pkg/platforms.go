@@ -10,6 +10,7 @@ import (
 )
 
 var platformMap = map[string]PlatformEnv{
+
 	"darwin_arm64": {
 		Download_build:       "https://dl.nwjs.io/v0.90.0/nwjs-v0.90.0-osx-arm64.zip",
 		Download_sdk:         "https://dl.nwjs.io/v0.90.0/nwjs-sdk-v0.90.0-osx-arm64.zip",
@@ -20,6 +21,20 @@ var platformMap = map[string]PlatformEnv{
 		PostSetup: func(pe PlatformEnv) {
 			exec.Command("xattr", "-cr", "nwjs-sdk-v0.90.0-osx-arm64/nwjs.app").Output()
 		},
+		Extractor: ExtractZip,
+	},
+
+	"linux_amd64": {
+		Download_build:       "https://dl.nwjs.io/v0.90.0/nwjs-v0.90.0-linux-x64.tar.gz",
+		Download_sdk:         "https://dl.nwjs.io/v0.90.0/nwjs-sdk-v0.90.0-linux-x64.tar.gz",
+		Download_target:      "nwjs.linux_x86.tar.gz",
+		Extract_sdk_target:   "extract.linux_x86.sdk",
+		Extract_build_target: "extract.inux_x86.build",
+		Launch_file:          "nwjs-sdk-v0.90.0-linux-x64/nw",
+		PostSetup: func(pe PlatformEnv) {
+
+		},
+		Extractor: ExtractTarGZ,
 	},
 }
 
@@ -61,7 +76,7 @@ func SetupPlatform() PlatformEnv {
 		go_utils.Err(err)
 	}
 
-	didStuff, err := ExtractZip(
+	didStuff, err := config.Extractor(
 		config.Download_target,
 		config.Extract_sdk_target,
 	)

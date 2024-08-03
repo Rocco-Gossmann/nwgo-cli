@@ -9,4 +9,5 @@ type PlatformEnv struct {
 	Launch_file          string
 
 	PostSetup func(PlatformEnv)
+	Extractor func(string, string) (bool, error)
 }
