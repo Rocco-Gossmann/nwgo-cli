@@ -62,10 +62,13 @@ Step 1:
 
 -   ✅`nwgo` install
 -   ✅ auto-download NWJS - Binaries on first run
-    -   ✅ for Mac (arm)
     -   ▢ for Window
-    -   ▢ for Linux (x86)
-    -   ✅ for Linux (arm)
+    -   ✅ for Mac (arm)
+    -   ~~for Mac (x86)~~  
+    <small>(can't verify due to missing Hardware)</small>
+    -   ✅ for Linux (x86)
+    -   ~~for Linux (arm)~~  
+    <small>(NW.JS does not seem to have a Linux-Arm64 Build)</small>
 
 Step 2:
 
