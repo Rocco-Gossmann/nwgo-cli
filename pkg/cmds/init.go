@@ -52,38 +52,53 @@ var initCommand cobra.Command = cobra.Command{
 		var templateFile = newTemplateFile()
 		var targetDir = "."
 
-		// Target dir
+		// Target dirs
+		//=====================================================================
 		if len(args) > 0 {
 			targetDir = args[0]
 		}
-		go_utils.MkDir(targetDir)
+		go_utils.Err(go_utils.MkDir(targetDir))
+		go_utils.MkDir(fmt.Sprintf("%s/goapi", targetDir))
 
 		templateFile.targetDir = targetDir
 
-		// Package Name
-		packageName, err := requestPackageName()
-		templateFile.Replacements["%%PackageName%%"] = packageName
+		// Package Names
+		//=====================================================================
+		nwJSPackageName, err := requestPackageName(
+			"NWJS - Package",
+			"^[a-z][a-z0-9-_.]*$",
+			"only use a-z 0-9 - _ and .  first letter must be a-z",
+		)
 		go_utils.Err(err)
+		templateFile.Replacements["%%NWPackageName%%"] = nwJSPackageName
+
+		goPackageName, err := requestPackageName(
+			"Go - Package",
+			"^[a-z][a-z0-9-_./]*$",
+			"only use a-z 0-9 - _ . and /  first letter must be a-z",
+		)
+		go_utils.Err(err)
+		templateFile.Replacements["%%GOPackageName%%"] = goPackageName
 
 		// Copy all the Stuff
+		//=====================================================================
 		templateFile.copy("tmpls/package.json.tmpl", "package.json")
 		templateFile.copy("tmpls/index.html.tmpl", "index.html")
 		templateFile.copy("tmpls/main.js.tmpl", "main.js")
+		templateFile.copy("tmpls/go.mod.tmpl", "go.mod")
+		templateFile.copy("tmpls/main.go.tmpl", "main.go")
+		templateFile.copy("tmpls/server.go.tmpl", "goapi/server.go")
 
 	},
 }
 
-func copyTemplateFile(src string, dst string) {
-
-}
-
-func requestPackageName() (string, error) {
+func requestPackageName(packageDescription string, validRegExp string, validChars string) (string, error) {
 	var tries = 0
 	var err error
 	var reader = bufio.NewReader(os.Stdin)
 	var packageName = ""
 
-	fmt.Println("Enter the package name (only a-z 0-9 -_ and . characters first letter must be a-z )\n-----------")
+	fmt.Printf("Enter the %s name (%s)\n-----------\n", packageDescription, validChars)
 	for tries < 3 {
 
 		packageName, err = reader.ReadString(byte('\n'))
@@ -93,14 +108,14 @@ func requestPackageName() (string, error) {
 
 		packageName = strings.Trim(packageName, "\r\n")
 
-		match, err := regexp.MatchString("^[a-z][a-z0-9-_.]*$", packageName)
+		match, err := regexp.MatchString(validRegExp, packageName)
 		if err != nil {
 			return "", err
 		}
 		go_utils.Err(err)
 
 		if !match {
-			fmt.Println("\nyour input contains invalid characters (only use a-z 0-9 - _ and .  first letter must be a-z)\n-----------")
+			fmt.Printf("\nyour input contains invalid characters (%s)\n-----------\n", validChars)
 			tries += 1
 		} else {
 			break

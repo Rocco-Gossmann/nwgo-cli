@@ -1,0 +1,80 @@
+package main
+
+import (
+	"fmt"
+	"log"
+	"net"
+	"net/http"
+	"os"
+
+	"github.com/rocco-gossmann/nwgo-demo/goapi"
+)
+
+var port int = 7000
+
+func buildAddr() int {
+	port += 1
+	return port
+}
+
+func main() {
+
+	mux := http.NewServeMux()
+	goapi.DefineRoutes(mux)
+
+	tries := 0
+
+	var portChannel chan int = make(chan int)
+
+	for tries < 20 {
+
+		tries += 1
+
+		go func(portout *chan int) {
+
+			port := buildAddr()
+			line, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+
+			if err == nil {
+				err = line.Close()
+				if err != nil {
+					panic(err)
+				}
+
+				portChannel <- port
+
+				server := http.Server{
+					Addr:    fmt.Sprintf("127.0.0.1:%d", port),
+					Handler: mux,
+				}
+
+				server.ListenAndServe()
+
+				server.Close()
+
+			} else {
+				log.Fatal(err)
+			}
+
+			portChannel <- 0
+
+		}(&portChannel)
+
+		port := <-portChannel
+
+		if port == 0 {
+			continue
+		} else {
+			fmt.Print(port)
+			break
+		}
+
+	}
+
+	if tries >= 20 {
+		log.Print("try limit reached")
+		os.Exit(2)
+	}
+
+	<-portChannel
+}
