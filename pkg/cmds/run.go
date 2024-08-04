@@ -1,6 +1,7 @@
 package cmds
 
 import (
+	"fmt"
 	"os/exec"
 
 	"github.com/rocco-gossmann/nwgo-cli/pkg"
@@ -13,6 +14,10 @@ var runCommand cobra.Command = cobra.Command{
 	Short: "runs a NW.JS Project",
 	Run: func(cmd *cobra.Command, args []string) {
 		var platform = pkg.SetupPlatform()
-		exec.Command(platform.Launch_file, args[0]).Output()
+
+		gocmd := exec.Command("go", "build", "-o", "backend")
+		gocmd.Dir = args[0]
+		fmt.Println(gocmd.Output())
+		fmt.Println(exec.Command(platform.Launch_file, args[0]).Output())
 	},
 }
