@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>%%NWPackageName%%</head>
+	<head><title>%%NWPackageName%%</title></head>
 	<body>
 		<h1>%%NWPackageName%%</h1>
-		<blink>Loading ...</blink>
-		<script type="text/javascript" src="/main.js"></script>
+		<p>Loading ...</p>
+
+		<script type="text/javascript">
+
+			const { spawn } = require('node:child_process');
+			const runcmd = spawn('./backend', ['-lh', '.']);
+
+			runcmd.stdout.on("data", (data) => window.location.href = `http:127.0.0.1:${data}/__start_server__`)
+			runcmd.stderr.on("data", (data) => console.error(`${data}`) )
+
+		</script>
 	</body>
 </html>

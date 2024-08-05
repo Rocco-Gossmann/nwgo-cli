@@ -3,7 +3,16 @@ package goapi
 import "net/http"
 
 func DefineRoutes(mux *http.ServeMux) {
-
-	// Define your Go - Server Endpoints here	
+	// Define your Go - Server Endpoints here
+	//
+	// GET /  -  is the entrypoint to your application it is automatically started
+	// If NWJS has successfully opened a window and started a Server
+	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`<!DOCTYPE html>
+			<body>
+				<h1> Hello NWGO - Project </h1>
+			</body>
+		`))
+	})
 
 }

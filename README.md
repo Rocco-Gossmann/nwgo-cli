@@ -33,7 +33,8 @@ go run . install
 ### Do I need to install NW.JS ?
 
 No, you don't. The first time you use the `nwgo run` command, this tool will
-automatically download the fiting NW.JS Files for your system.
+automatically download the fiting NW.JS Files for your system. 
+(Only Mac ARM, Linux x86_64 are  are supported at the moment)
 
 everything this tool downloads is stored in ~/.local/state/nwgo
 
@@ -72,12 +73,12 @@ Step 1:
 
 Step 2:
 
--   ▢ add a go based server template to the project created by `nwgo init`
--   ▢ have `nwgo` automatically compile that `go-server` project
--   ▢ have `nwjs` launch that `go server` on a free port uppon start
--   ▢ pass the port of the launched file back to `nwjs`
--   ▢ make sure the server is killed when nwjs closes
--   ▢ make sure the server is killed when nwjs closes
+-   ✅ add a go based server template to the project created by `nwgo init`
+-   ✅ have `nwgo` automatically compile that `go-server` project
+-   ✅ have `nwjs` launch that `go server` on a free port uppon start
+-   ✅ pass the port of the launched file back to `nwjs`
+-   ✅ make sure the server is killed when nwjs closes
+-   ▢ fix Error-Output during backend compile process
 
 Step 3:
 
@@ -85,3 +86,7 @@ Step 3:
 -   ▢ download the none SDK version of NWJS
 -   ▢ combine the project into a 'nw' file
 -   ▢ link the `nw-file` together with the download NWJS to create one application.
+
+Step 4
+-   ▢ fix window-close-detection, when switching to a different domain 
+

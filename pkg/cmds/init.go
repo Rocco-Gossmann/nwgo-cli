@@ -84,7 +84,6 @@ var initCommand cobra.Command = cobra.Command{
 		//=====================================================================
 		templateFile.copy("tmpls/package.json.tmpl", "package.json")
 		templateFile.copy("tmpls/index.html.tmpl", "index.html")
-		templateFile.copy("tmpls/main.js.tmpl", "main.js")
 		templateFile.copy("tmpls/go.mod.tmpl", "go.mod")
 		templateFile.copy("tmpls/main.go.tmpl", "main.go")
 		templateFile.copy("tmpls/server.go.tmpl", "goapi/server.go")

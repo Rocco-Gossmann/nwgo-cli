@@ -11,6 +11,27 @@ import (
 )
 
 var port int = 7000
+var server *http.Server = nil
+
+func killServer(w http.ResponseWriter, r *http.Request) {
+	if server != nil {
+		server.Shutdown(nil)
+	}
+}
+
+func initServer(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Add("content-type", "text/html")
+	w.WriteHeader(200)
+
+	r.URL.Path = "/"
+	server.Handler.ServeHTTP(w, r)
+
+	w.Write([]byte(fmt.Sprintf(`<script type="text/javascript">
+		window.addEventListener("unload", () => fetch("/__stop_server__") )
+	</script>`)))
+
+}
 
 func buildAddr() int {
 	port += 1
@@ -20,6 +41,8 @@ func buildAddr() int {
 func main() {
 
 	mux := http.NewServeMux()
+	mux.HandleFunc("GET /__start_server__", initServer)
+	mux.HandleFunc("GET /__stop_server__", killServer)
 	goapi.DefineRoutes(mux)
 
 	tries := 0
@@ -43,7 +66,7 @@ func main() {
 
 				portChannel <- port
 
-				server := http.Server{
+				server = &http.Server{
 					Addr:    fmt.Sprintf("127.0.0.1:%d", port),
 					Handler: mux,
 				}
