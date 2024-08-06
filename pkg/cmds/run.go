@@ -17,7 +17,19 @@ var runCommand cobra.Command = cobra.Command{
 
 		gocmd := exec.Command("go", "build", "-o", "backend")
 		gocmd.Dir = args[0]
-		fmt.Println(gocmd.Output())
-		fmt.Println(exec.Command(platform.Launch_file, args[0]).Output())
+
+		out, err := gocmd.CombinedOutput()
+		if err == nil {
+			out, err = exec.Command(platform.Launch_file, args[0]).CombinedOutput()
+			if err != nil {
+				fmt.Println("nwjs launch error:\n--------------------------")
+				fmt.Println(string(out))
+				fmt.Println()
+			}
+		} else {
+			fmt.Println("backend compilation error:\n--------------------------")
+			fmt.Println(string(out))
+			fmt.Println()
+		}
 	},
 }
