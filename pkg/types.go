@@ -1,6 +1,7 @@
 package pkg
 
 type PlatformEnv struct {
+	DirSeparator         string
 	Download_sdk         string
 	Download_build       string
 	Download_target      string

@@ -21,7 +21,8 @@ var platformMap = map[string]PlatformEnv{
 		PostSetup: func(pe PlatformEnv) {
 			exec.Command("xattr", "-cr", "nwjs-sdk-v0.90.0-osx-arm64/nwjs.app").Output()
 		},
-		Extractor: ExtractZip,
+		Extractor:    ExtractZip,
+		DirSeparator: "/",
 	},
 
 	"linux_amd64": {
@@ -29,12 +30,27 @@ var platformMap = map[string]PlatformEnv{
 		Download_sdk:         "https://dl.nwjs.io/v0.90.0/nwjs-sdk-v0.90.0-linux-x64.tar.gz",
 		Download_target:      "nwjs.linux_x86.tar.gz",
 		Extract_sdk_target:   "extract.linux_x86.sdk",
-		Extract_build_target: "extract.inux_x86.build",
+		Extract_build_target: "extract.linux_x86.build",
 		Launch_file:          "nwjs-sdk-v0.90.0-linux-x64/nw",
 		PostSetup: func(pe PlatformEnv) {
 
 		},
-		Extractor: ExtractTarGZ,
+		Extractor:    ExtractTarGZ,
+		DirSeparator: "/",
+	},
+
+	"windows_amd64": {
+		Download_build:       "https://dl.nwjs.io/v0.90.0/nwjs-v0.90.0-win-x64.zip",
+		Download_sdk:         "https://dl.nwjs.io/v0.90.0/nwjs-sdk-v0.90.0-win-x64.zip",
+		Download_target:      "nwjs.win.zip",
+		Extract_sdk_target:   "extract.win_x64.sdk",
+		Extract_build_target: "extract.win.build",
+		Launch_file:          "nwjs-sdk-v0.90.0-win-x64\\nw.exe",
+		PostSetup: func(pe PlatformEnv) {
+
+		},
+		Extractor:    ExtractZip,
+		DirSeparator: "\\",
 	},
 }
 
@@ -55,10 +71,10 @@ func GetPlatformConfig() PlatformEnv {
 	var base = NWGO_BASEPATH
 	go_utils.MkDir(base)
 
-	platform.Download_target = fmt.Sprintf("%s/%s", base, platform.Download_target)
-	platform.Extract_sdk_target = fmt.Sprintf("%s/%s", base, platform.Extract_sdk_target)
-	platform.Extract_build_target = fmt.Sprintf("%s/%s", base, platform.Extract_build_target)
-	platform.Launch_file = fmt.Sprintf("%s/%s", platform.Extract_sdk_target, platform.Launch_file)
+	platform.Download_target = fmt.Sprintf("%s%s%s", base, platform.DirSeparator, platform.Download_target)
+	platform.Extract_sdk_target = fmt.Sprintf("%s%s%s", base, platform.DirSeparator, platform.Extract_sdk_target)
+	platform.Extract_build_target = fmt.Sprintf("%s%s%s", base, platform.DirSeparator, platform.Extract_build_target)
+	platform.Launch_file = fmt.Sprintf("%s%s%s", platform.Extract_sdk_target, platform.DirSeparator, platform.Launch_file)
 
 	return platform
 }

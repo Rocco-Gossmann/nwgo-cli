@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"strings"
 
 	"github.com/rocco-gossmann/go_utils"
+	"github.com/rocco-gossmann/nwgo-cli/pkg"
 	"github.com/spf13/cobra"
 )
 
@@ -15,6 +18,8 @@ var installCommand cobra.Command = cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		var err error
+
+		var platform = pkg.GetPlatformConfig()
 
 		_, err = os.Stat(BIN_FILE)
 
@@ -30,7 +35,10 @@ var installCommand cobra.Command = cobra.Command{
 		go_utils.Err(err)
 		defer input.Close()
 
-		output, err := os.OpenFile(absoluteBinPath, os.O_WRONLY|os.O_CREATE, 0777)
+		baseFile := strings.ReplaceAll(absoluteBinPath, "/", platform.DirSeparator)
+		go_utils.Err(go_utils.MkDir(filepath.Dir(baseFile)))
+
+		output, err := os.OpenFile(baseFile, os.O_WRONLY|os.O_CREATE, 0777)
 		go_utils.Err(err)
 		defer output.Close()
 
