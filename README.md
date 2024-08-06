@@ -30,7 +30,7 @@ Run the Install command.
 Sadly Gos `install` does not support changing the target binary name yet, so
 nwgo-cli comes with its own `install` command to compensate for that.
 
-run this commands
+run these commands
 
 ```bash
 go mod tidy
@@ -57,13 +57,16 @@ nwgo init [ProjectDirectoryName]
 this is the name that represents the NWJS-Frontend part of your application.
 
 3.) then you'll be asked for as **"Go-Package"** name
-this is the Go-Backend side of your application.  
+this is the Go-Backend side of your application.
 an example would be `github.com/your-account/your-project-directory`
 
-> [!info]  
+4.) last, you'll be asked for an Application Title.
+This is the Title, that your OS will show as the Window-Title
+
+> [!info]
 > both inputs give you rules on what characters are allowed in the respective names
 
-4.) if everything fits, you should now have a Folder, containing the following structure
+5.) if everything fits, you should now have a Folder, containing the following structure
 
 ```
 [ProjectDirectoryName]
@@ -87,12 +90,12 @@ cd [ProjectDirectoryName]
 nwgo run .
 ```
 
-> [!info]  
+> [!info]
 > The first time you run this command, it will download and set up the NWJS-SDK-For your Platform.
 > This may take a while, depending on your Download speed.
 
-7.) your Project will live in the `goapi` folder.  
-You define all your Backend-Routes in `goapi/server.go`.  
+7.) your Project will live in the `goapi` folder.
+You define all your Backend-Routes in `goapi/server.go`.
 The Entry Point for your Application is the `GET /` Route. There shoudl already
 be an example created for you.
 
@@ -123,10 +126,10 @@ Step 1:
 -   ✅ auto-download NWJS - Binaries on first run
     -   ▢ for Window
     -   ✅ for Mac (arm)
-    -   ~~for Mac (x86)~~  
+    -   ~~for Mac (x86)~~
         <small>(can't verify due to missing Hardware)</small>
     -   ✅ for Linux (x86)
-    -   ~~for Linux (arm)~~  
+    -   ~~for Linux (arm)~~
         <small>(NW.JS does not seem to have a Linux-Arm64 Build)</small>
 
 Step 2:

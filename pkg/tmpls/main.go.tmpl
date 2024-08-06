@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"time"
 
 	"%%GOPackageName%%/goapi"
 )
@@ -14,9 +15,17 @@ var port int = 7000
 var server *http.Server = nil
 
 func killServer(w http.ResponseWriter, r *http.Request) {
-	if server != nil {
-		server.Shutdown(nil)
-	}
+
+	w.Write([]byte(`<!DOCTYPE html>
+		<script type="text/javascript"> window.setTimeout(() => window.close(), 100); </script>
+	`))
+
+	go func() {
+		time.Sleep(750 * time.Millisecond)
+		if server != nil {
+			server.Shutdown(nil)
+		}
+	}()
 }
 
 func initServer(w http.ResponseWriter, r *http.Request) {
@@ -27,9 +36,7 @@ func initServer(w http.ResponseWriter, r *http.Request) {
 	r.URL.Path = "/"
 	server.Handler.ServeHTTP(w, r)
 
-	w.Write([]byte(fmt.Sprintf(`<script type="text/javascript">
-		window.addEventListener("unload", () => fetch("/__stop_server__") )
-	</script>`)))
+	w.Write([]byte(fmt.Sprintf(`<script type="module"> </script>`)))
 
 }
 

@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head><title>%%NWPackageName%%</title></head>
+	<head><title>%%ProjectTitle%%</title></head>
 	<body>
-		<h1>%%NWPackageName%%</h1>
-		<p>Loading ...</p>
 
-		<script type="text/javascript">
+		<iframe id="main-frame" style="display: block; position: absolute; inset: 0px; width: 100vw; height:100vw; border: none"></iframe>
+
+		<script type="module">
 
 			const { spawn } = require('node:child_process');
-			const runcmd = spawn('./backend', ['-lh', '.']);
+			const runcmd = spawn('./backend');
 
-			runcmd.stdout.on("data", (data) => window.location.href = `http:127.0.0.1:${data}/__start_server__`)
+			runcmd.stdout.on("data", (data) => {
+				nw.Window.get().on("close", () => {
+					window.location.href=`http://127.0.0.1:${data}/__stop_server__`
+				} )
+				document.querySelector("#main-frame").src = `http://127.0.0.1:${data}/__start_server__`
+			})
+
 			runcmd.stderr.on("data", (data) => console.error(`${data}`) )
 
 		</script>
