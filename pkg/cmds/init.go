@@ -65,7 +65,7 @@ var initCommand cobra.Command = cobra.Command{
 		// Package Names
 		//=====================================================================
 		nwJSPackageName, err := requestPackageName(
-			"NWJS - Package",
+			"NWJS - Package name",
 			"^[a-z][a-z0-9-_.]*$",
 			"only use a-z 0-9 - _ and .  first letter must be a-z",
 		)
@@ -73,12 +73,21 @@ var initCommand cobra.Command = cobra.Command{
 		templateFile.Replacements["%%NWPackageName%%"] = nwJSPackageName
 
 		goPackageName, err := requestPackageName(
-			"Go - Package",
+			"Go - Package name",
 			"^[a-z][a-z0-9-_./]*$",
 			"only use a-z 0-9 - _ . and /  first letter must be a-z",
 		)
 		go_utils.Err(err)
 		templateFile.Replacements["%%GOPackageName%%"] = goPackageName
+
+		// Project Title
+		//=====================================================================
+		projectTitle, err := requestPackageName(
+			"Project Title",
+			".*",
+			"all characters allowed",
+		)
+		templateFile.Replacements["%%ProjectTitle%%"] = projectTitle
 
 		// Copy all the Stuff
 		//=====================================================================
@@ -97,7 +106,7 @@ func requestPackageName(packageDescription string, validRegExp string, validChar
 	var reader = bufio.NewReader(os.Stdin)
 	var packageName = ""
 
-	fmt.Printf("Enter the %s name (%s)\n-----------\n", packageDescription, validChars)
+	fmt.Printf("Enter the %s (%s)\n-----------\n", packageDescription, validChars)
 	for tries < 3 {
 
 		packageName, err = reader.ReadString(byte('\n'))
