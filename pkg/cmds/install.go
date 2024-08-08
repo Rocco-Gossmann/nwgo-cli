@@ -21,19 +21,16 @@ var installCommand cobra.Command = cobra.Command{
 
 		var platform = pkg.GetPlatformConfig()
 
+		fmt.Println("compiling")
+		_, err = exec.Command("go", "build", "-o", BIN_FILE, ".").Output()
+		go_utils.Err(err)
 		_, err = os.Stat(BIN_FILE)
-
-		if os.IsNotExist(err) {
-			fmt.Println("compiling")
-			_, err = exec.Command("go", "build", "-o", BIN_FILE, ".").Output()
-			go_utils.Err(err)
-			_, err = os.Stat(BIN_FILE)
-		}
 		go_utils.Err(err)
 
 		input, err := os.Open(BIN_FILE)
 		go_utils.Err(err)
 		defer input.Close()
+		defer os.Remove(BIN_FILE)
 
 		baseFile := strings.ReplaceAll(absoluteBinPath, "/", platform.DirSeparator)
 		go_utils.Err(go_utils.MkDir(filepath.Dir(baseFile)))
