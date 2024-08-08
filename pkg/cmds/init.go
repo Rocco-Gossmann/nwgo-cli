@@ -51,6 +51,7 @@ var initCommand cobra.Command = cobra.Command{
 		var err error
 		var templateFile = newTemplateFile()
 		var targetDir = "."
+		var platform = pkg.SetupPlatform()
 
 		// Target dirs
 		//=====================================================================
@@ -61,6 +62,12 @@ var initCommand cobra.Command = cobra.Command{
 		go_utils.MkDir(fmt.Sprintf("%s/goapi", targetDir))
 
 		templateFile.targetDir = targetDir
+		templateFile.Replacements["%%BackendBinary%%"] = fmt.Sprintf(
+			".%s%s%s",
+			platform.DirSeparator,
+			platform.BackendBinarySlash,
+			platform.BackendBinary,
+		)
 
 		// Package Names
 		//=====================================================================

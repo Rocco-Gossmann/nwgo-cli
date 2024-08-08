@@ -21,8 +21,9 @@ var platformMap = map[string]PlatformEnv{
 		PostSetup: func(pe PlatformEnv) {
 			exec.Command("xattr", "-cr", "nwjs-sdk-v0.90.0-osx-arm64/nwjs.app").Output()
 		},
-		Extractor:    ExtractZip,
-		DirSeparator: "/",
+		Extractor:     ExtractZip,
+		DirSeparator:  "/",
+		BackendBinary: "backend",
 	},
 
 	"linux_amd64": {
@@ -35,8 +36,9 @@ var platformMap = map[string]PlatformEnv{
 		PostSetup: func(pe PlatformEnv) {
 
 		},
-		Extractor:    ExtractTarGZ,
-		DirSeparator: "/",
+		Extractor:     ExtractTarGZ,
+		DirSeparator:  "/",
+		BackendBinary: "backend",
 	},
 
 	"windows_amd64": {
@@ -49,8 +51,10 @@ var platformMap = map[string]PlatformEnv{
 		PostSetup: func(pe PlatformEnv) {
 
 		},
-		Extractor:    ExtractZip,
-		DirSeparator: "\\",
+		Extractor:          ExtractZip,
+		DirSeparator:       "\\",
+		BackendBinary:      "backend.exe",
+		BackendBinarySlash: "\\",
 	},
 }
 

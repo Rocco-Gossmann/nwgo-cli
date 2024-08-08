@@ -15,7 +15,7 @@ var runCommand cobra.Command = cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var platform = pkg.SetupPlatform()
 
-		gocmd := exec.Command("go", "build", "-o", "backend")
+		gocmd := exec.Command("go", "build", "-o", platform.BackendBinary)
 		gocmd.Dir = args[0]
 
 		out, err := gocmd.CombinedOutput()
