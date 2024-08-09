@@ -118,14 +118,27 @@ typing it by itself gives you a help, for what it can do.
 | `nwgo run  [path]` | launchens the given NWJS - Project at the given `[path]`                                                                    |
 | `nwgo uninstall`   | Removes everything, that has been downloaded or installed via this tool<br><small>Your Projects will stay untouched</small> |
 
+# Uninstall
+
+## for Mac / Linux 
+just call
+```bash
+nwgo uninstall
+```
+
+## for Windows
+please use the provided `uninstall.bat` Batch-Script.
+Windows does not allow a running binary to delete itself, so we need some help from 
+the native window CMD to truely clean everything.
+
 # Roadmap
 
 Step 1:
 
 -   ✅`nwgo` install
 -   ✅ auto-download NWJS - Binaries on first run
-    -   ▢ for Window
-    -   ✅ for Mac (arm)
+    -   ✅ for Window
+    -   ✅for Mac (arm)
     -   ~~for Mac (x86)~~
         <small>(can't verify due to missing Hardware)</small>
     -   ✅ for Linux (x86)
@@ -139,7 +152,7 @@ Step 2:
 -   ✅ have `nwjs` launch that `go server` on a free port uppon start
 -   ✅ pass the port of the launched file back to `nwjs`
 -   ✅ make sure the server is killed when nwjs closes
--   ▢ fix Error-Output during backend compile process
+-   ✅ fix Error-Output during backend compile process
 
 Step 3:
 
