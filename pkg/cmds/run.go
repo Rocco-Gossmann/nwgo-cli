@@ -13,7 +13,7 @@ var runCommand cobra.Command = cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Short: "runs a NW.JS Project",
 	Run: func(cmd *cobra.Command, args []string) {
-		var platform = pkg.SetupPlatform()
+		var platform = pkg.SetupPlatform(pkg.SetupPlatformOpts{})
 
 		gocmd := exec.Command("go", "build", "-o", platform.BackendBinary)
 		gocmd.Dir = args[0]

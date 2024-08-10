@@ -43,6 +43,7 @@ func init() {
 		&initCommand,
 		&runCommand,
 		&uninstallCommand,
+		&buildCommand,
 	)
 }
 

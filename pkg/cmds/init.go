@@ -51,7 +51,7 @@ var initCommand cobra.Command = cobra.Command{
 		var err error
 		var templateFile = newTemplateFile()
 		var targetDir = "."
-		var platform = pkg.SetupPlatform()
+		var platform = pkg.SetupPlatform(pkg.SetupPlatformOpts{})
 
 		// Target dirs
 		//=====================================================================
