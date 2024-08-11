@@ -56,22 +56,24 @@ func main() {
 
 	var portChannel chan int = make(chan int)
 
-	for tries < 20 {
+port_search_loop:
+	for tries < 99 {
 
 		tries += 1
 
-		go func(portout *chan int) {
+		go func(portout chan int) {
 
 			port := buildAddr()
-			line, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+			line, err := net.Listen("tcp", fmt.Sprintf("127.0.0.1:%d", port))
 
 			if err == nil {
+
 				err = line.Close()
 				if err != nil {
 					panic(err)
 				}
 
-				portChannel <- port
+				portout <- port
 
 				server = &http.Server{
 					Addr:    fmt.Sprintf("127.0.0.1:%d", port),
@@ -79,30 +81,30 @@ func main() {
 				}
 
 				server.ListenAndServe()
-
 				server.Close()
 
-			} else {
-				log.Fatal(err)
 			}
 
-			portChannel <- 0
+			portout <- 0
 
-		}(&portChannel)
+		}(portChannel)
 
 		port := <-portChannel
 
-		if port == 0 {
-			continue
-		} else {
+		switch port {
+		default:
 			fmt.Print(port)
-			break
+			break port_search_loop
+
+		case 0:
+			continue
+
 		}
 
 	}
 
-	if tries >= 20 {
-		log.Print("try limit reached")
+	if tries >= 99 {
+		log.Print("try limit reached, there does not seem to be a free port in the range of 7001 to 7099")
 		os.Exit(2)
 	}
 
