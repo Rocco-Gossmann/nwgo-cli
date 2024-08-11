@@ -108,8 +108,6 @@ func GetPlatformConfig() PlatformEnv {
 	platform.Download_target_prod = fmt.Sprintf("%s%c%s", base, os.PathSeparator, platform.Download_target_prod)
 	platform.Extract_sdk_target = fmt.Sprintf("%s%c%s", base, os.PathSeparator, platform.Extract_sdk_target)
 	platform.Extract_build_target = fmt.Sprintf("%s%c%s", base, os.PathSeparator, platform.Extract_build_target)
-	platform.Extract_sdk_target = fmt.Sprintf("%s%c%s", base, os.PathSeparator, platform.Extract_sdk_target)
-	platform.Extract_build_target = fmt.Sprintf("%s%c%s", base, os.PathSeparator, platform.Extract_build_target)
 	platform.Launch_file = fmt.Sprintf("%s%c%s", platform.Extract_sdk_target, os.PathSeparator, platform.Launch_file)
 
 	return platform
@@ -165,7 +163,7 @@ func SetupPlatform(opts SetupPlatformOpts) PlatformEnv {
 
 	go_utils.Err(err)
 
-	if didStuff {
+	if didStuff && config.PostSetup != nil {
 		config.PostSetup(config)
 	}
 

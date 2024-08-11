@@ -104,8 +104,10 @@ var buildCommand cobra.Command = cobra.Command{
 		zipArchive.Close()
 		zipFile.Close()
 
-		// DONE: Finalize Platform specific build
-		platform.PostBuild(platform, fullBuildPath)
+		if platform.PostBuild != nil {
+			//DONE: Finalize Platform specific build
+			platform.PostBuild(platform, fullBuildPath)
+		}
 
 	},
 }

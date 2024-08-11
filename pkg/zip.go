@@ -36,6 +36,8 @@ func ExtractTarGZ(inFile string, dstPath string) (didStuff bool, err error) {
 
 	tarReader := tar.NewReader(gz)
 
+	var item string
+
 	for {
 		tarItem, err := tarReader.Next()
 		if err == io.EOF {
@@ -43,7 +45,7 @@ func ExtractTarGZ(inFile string, dstPath string) (didStuff bool, err error) {
 		}
 		go_utils.Err(err)
 
-		var item string = fmt.Sprintf("%s/%s", dstPath, tarItem.Name)
+		item = fmt.Sprintf("%s%c%s", dstPath, os.PathSeparator, tarItem.Name)
 
 		fmt.Print(CLEAR_CMD_LINE, "Extract: ", tarItem.Name)
 
@@ -55,17 +57,20 @@ func ExtractTarGZ(inFile string, dstPath string) (didStuff bool, err error) {
 			dir := filepath.Dir(item)
 			go_utils.Err(go_utils.MkDir(dir))
 
-			dstFile, err := os.OpenFile(item, os.O_CREATE|os.O_WRONLY, 0557)
-			go_utils.Err(err)
-			defer dstFile.Close()
+			func() {
+				dstFile, err := os.OpenFile(item, os.O_CREATE|os.O_WRONLY, 0777)
+				go_utils.Err(err)
+				defer dstFile.Close()
 
-			_, err = io.Copy(dstFile, tarReader)
-			go_utils.Err(err)
+				_, err = io.Copy(dstFile, tarReader)
+				go_utils.Err(err)
 
-			didStuff = true
+				didStuff = true
+			}()
 		}
 	}
 
+	fmt.Print(CLEAR_CMD_LINE, "Extract: done !!!\n")
 	return
 }
 
