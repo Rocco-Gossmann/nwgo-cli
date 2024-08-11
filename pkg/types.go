@@ -12,8 +12,10 @@ type PlatformEnv struct {
 	BackendBinary        string
 	BackendBinarySlash   string
 	BuildCutPath         string
+	BuildPreRunJS        string
 
 	PostSetup   func(PlatformEnv)
 	PostExtract func(PlatformEnv)
+	PostBuild   func(pl PlatformEnv, buildPath string)
 	Extractor   func(string, string) (bool, error)
 }

@@ -96,6 +96,9 @@ var initCommand cobra.Command = cobra.Command{
 		)
 		templateFile.Replacements["%%ProjectTitle%%"] = projectTitle
 
+		// OS specific PreRun Actions
+		templateFile.Replacements["%%BuildPreRunCmd%%"] = platform.BuildPreRunJS
+
 		// Copy all the Stuff
 		//=====================================================================
 		templateFile.copy("tmpls/package.json.tmpl", "package.json")

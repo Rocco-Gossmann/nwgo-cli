@@ -8,6 +8,9 @@
 		<script type="module">
 
 			const { spawn } = require('node:child_process');
+
+			%%BuildPreRunCmd%%
+	
 			const runcmd = spawn('%%BackendBinary%%');
 
 			runcmd.stdout.on("data", (data) => {

@@ -6,26 +6,56 @@ import (
 	"os/exec"
 	"runtime"
 
+	"github.com/rocco-gossmann/go_fileutils"
 	"github.com/rocco-gossmann/go_utils"
 )
 
 var platformMap = map[string]PlatformEnv{
 
 	"darwin_arm64": {
-		Download_build:       "https://dl.nwjs.io/v0.90.0/nwjs-v0.90.0-osx-arm64.zip",
+		Download_build: "https://dl.nwjs.io/v0.90.0/nwjs-v0.90.0-osx-arm64.zip",
+		BuildCutPath:   "nwjs-v0.90.0-osx-arm64/",
+		//Download_build:       "https://dl.nwjs.io/v0.90.0/nwjs-sdk-v0.90.0-osx-arm64.zip",
+		//BuildCutPath:         "nwjs-sdk-v0.90.0-osx-arm64/",
 		Download_sdk:         "https://dl.nwjs.io/v0.90.0/nwjs-sdk-v0.90.0-osx-arm64.zip",
 		Download_target:      "nwjs.mac.zip",
 		Download_target_prod: "nwjs.mac.prod.zip",
 		Extract_sdk_target:   "extract.mac.sdk",
 		Extract_build_target: "extract.mac.build",
 		Launch_file:          "nwjs-sdk-v0.90.0-osx-arm64/nwjs.app/Contents/MacOS/nwjs",
+		BuildPreRunJS:        `spawn('chmod', [ '+x', './backend' ])`,
 		PostSetup: func(pe PlatformEnv) {
 			exec.Command("xattr", "-cr", "nwjs-sdk-v0.90.0-osx-arm64/nwjs.app").Output()
 		},
 		Extractor:     ExtractZip,
 		DirSeparator:  "/",
 		BackendBinary: "backend",
-		BuildCutPath:  "nwjs-v0.90.0-osx-arm64/",
+		PostBuild: func(pl PlatformEnv, buildPath string) {
+
+			progChan := go_fileutils.CopyFile(
+				buildPath+"app.zip",
+				buildPath+"nwjs.app/Contents/Resources/app.nw",
+			)
+
+		copy_loop:
+			for {
+				prog := <-progChan
+				switch prog.State {
+				case go_fileutils.STATE_START_FILE:
+					fmt.Println("copying ", prog.BytesTotal, " bytes")
+
+				case go_fileutils.STATE_COPY:
+					fmt.Print(go_utils.CLEAR_CMD_LINE_SEQ, "copy => ", prog.BytesCopied, " to go")
+
+				case go_fileutils.STATE_ERROR:
+					panic(prog.Error)
+
+				case go_fileutils.STATE_END_FILE:
+					break copy_loop
+				}
+			}
+
+		},
 	},
 
 	"linux_amd64": {
@@ -39,6 +69,7 @@ var platformMap = map[string]PlatformEnv{
 		Extractor:            ExtractTarGZ,
 		DirSeparator:         "/",
 		BackendBinary:        "backend",
+		BuildPreRunJS:        `spawn('chmod', [ '+x', './backend' ])`,
 	},
 
 	"windows_amd64": {
