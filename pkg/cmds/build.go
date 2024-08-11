@@ -78,8 +78,6 @@ var buildCommand cobra.Command = cobra.Command{
 			}
 		}
 
-		// TODO: package everything into a zip
-
 		// DONE: rename .zip to .nw
 		// DONE: Put .nw file into build directory
 		zipFile, err := os.Create(fullBuildPath + "app.zip")

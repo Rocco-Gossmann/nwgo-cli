@@ -47,8 +47,6 @@ func ExtractTarGZ(inFile string, dstPath string) (didStuff bool, err error) {
 
 		item = fmt.Sprintf("%s%c%s", dstPath, os.PathSeparator, tarItem.Name)
 
-		fmt.Print(CLEAR_CMD_LINE, "Extract: ", tarItem.Name)
-
 		switch tarItem.Typeflag {
 		case tar.TypeDir:
 			go_utils.Err(go_utils.MkDir(item))
@@ -58,6 +56,12 @@ func ExtractTarGZ(inFile string, dstPath string) (didStuff bool, err error) {
 			go_utils.Err(go_utils.MkDir(dir))
 
 			func() {
+				_, err := os.Stat(item)
+				if !os.IsNotExist(err) {
+					return
+				}
+
+				fmt.Print(CLEAR_CMD_LINE, "Extract: ", tarItem.Name)
 				dstFile, err := os.OpenFile(item, os.O_CREATE|os.O_WRONLY, 0777)
 				go_utils.Err(err)
 				defer dstFile.Close()
@@ -70,7 +74,9 @@ func ExtractTarGZ(inFile string, dstPath string) (didStuff bool, err error) {
 		}
 	}
 
-	fmt.Print(CLEAR_CMD_LINE, "Extract: done !!!\n")
+	if didStuff {
+		fmt.Print(CLEAR_CMD_LINE, "Extract: done !!!\n")
+	}
 	return
 }
 
