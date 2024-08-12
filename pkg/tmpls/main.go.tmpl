@@ -29,15 +29,8 @@ func killServer(w http.ResponseWriter, r *http.Request) {
 }
 
 func initServer(w http.ResponseWriter, r *http.Request) {
-
-	w.Header().Add("content-type", "text/html")
-	w.WriteHeader(200)
-
 	r.URL.Path = "/"
 	server.Handler.ServeHTTP(w, r)
-
-	w.Write([]byte(fmt.Sprintf(`<script type="module"> </script>`)))
-
 }
 
 func buildAddr() int {
@@ -48,6 +41,7 @@ func buildAddr() int {
 func main() {
 
 	mux := http.NewServeMux()
+	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	mux.HandleFunc("GET /__start_server__", initServer)
 	mux.HandleFunc("GET /__stop_server__", killServer)
 	goapi.DefineRoutes(mux)

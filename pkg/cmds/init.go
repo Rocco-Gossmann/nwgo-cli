@@ -60,6 +60,7 @@ var initCommand cobra.Command = cobra.Command{
 		}
 		go_utils.Err(go_utils.MkDir(targetDir))
 		go_utils.MkDir(fmt.Sprintf("%s/goapi", targetDir))
+		go_utils.MkDir(fmt.Sprintf("%s/static", targetDir))
 
 		templateFile.targetDir = targetDir
 		templateFile.Replacements["%%BackendBinary%%"] = fmt.Sprintf(
