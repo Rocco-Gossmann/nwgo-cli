@@ -42,6 +42,7 @@ var installCommand cobra.Command = cobra.Command{
 		go_utils.CopyWithProgress(input, output, func(_ int) {
 			fmt.Print(".")
 		})
+
 		fmt.Print("\nDone !!!\nYou should now be able to call 'nwgo' from everywhere on your system")
 
 	},

@@ -1,5 +1,7 @@
 package pkg
 
+import "os"
+
 type PlatformEnv struct {
 	DirSeparator         string
 	Download_sdk         string
@@ -16,6 +18,6 @@ type PlatformEnv struct {
 
 	PostSetup   func(PlatformEnv)
 	PostExtract func(PlatformEnv)
-	PostBuild   func(pl PlatformEnv, buildPath string)
+	PostBuild   func(pl PlatformEnv, f *os.File, buildPath string)
 	Extractor   func(string, string) (bool, error)
 }

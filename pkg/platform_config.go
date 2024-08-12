@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/rocco-gossmann/go_fileutils"
 	"github.com/rocco-gossmann/go_utils"
 )
 
@@ -61,33 +60,20 @@ var platformMap = map[string]PlatformEnv{
 	},
 }
 
-func moveAppToPackage(targetFile string) func(PlatformEnv, string) {
-	return func(pl PlatformEnv, buildPath string) {
-		progChan := go_fileutils.CopyFile(
-			buildPath+"app.zip",
-			buildPath+targetFile,
-		)
+func moveAppToPackage(targetFile string) func(PlatformEnv, *os.File, string) {
+	return func(pl PlatformEnv, f *os.File, buildPath string) {
 
-	copy_loop:
-		for {
-			prog := <-progChan
-			switch prog.State {
-			case go_fileutils.STATE_START_FILE:
-				fmt.Println("copying ", prog.BytesTotal, " bytes")
+		tf, err := os.Create(buildPath + targetFile)
+		go_utils.Err(err)
+		defer tf.Close()
 
-			case go_fileutils.STATE_COPY:
-				fmt.Print(go_utils.CLEAR_CMD_LINE_SEQ, "copy => ", prog.BytesCopied, " to go")
+		go_utils.CopyWithProgress(f, tf, func(bytesCopied int) {
+			fmt.Print(go_utils.CLEAR_CMD_LINE_SEQ, "finalizing: ", bytesCopied)
+		})
 
-			case go_fileutils.STATE_ERROR:
-				panic(prog.Error)
-
-			case go_fileutils.STATE_END_FILE:
-				break copy_loop
-			}
-		}
-
-		os.Remove(buildPath + "app.zip")
+		fmt.Println(go_utils.CLEAR_CMD_LINE_SEQ, "finalizing: done !!!")
 	}
+
 }
 
 // Mac Specific functions

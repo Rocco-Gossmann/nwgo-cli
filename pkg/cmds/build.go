@@ -27,7 +27,7 @@ func packIntoZip(zipArchive *zip.Writer, file, targetInZip string) (err error) {
 	defer fIn.Close()
 
 	_, err = go_utils.CopyWithProgress(fIn, fOut, func(bytesCopied int) {
-		fmt.Print(go_utils.CLEAR_CMD_LINE_SEQ, "packing %s: %d", targetInZip, bytesCopied)
+		fmt.Print(go_utils.CLEAR_CMD_LINE_SEQ, "packing ", targetInZip, ": ", bytesCopied)
 	})
 
 	return
@@ -47,18 +47,15 @@ var buildCommand cobra.Command = cobra.Command{
 		fullBasePath += string(os.PathSeparator)
 		var fullBuildPath = fullBasePath + "build" + string(os.PathSeparator)
 
+		// Build Backend
 		gocmd := exec.Command("go", "build", "-o", fullBasePath+platform.BackendBinary)
 		gocmd.Dir = args[0]
 		go_utils.Err(gocmd.Run())
 
-		// done: empty build dir (in case it existed beforehand)
 		go_utils.Err(os.RemoveAll(fullBuildPath))
-
-		// DONE: create output build dir
 		go_utils.Err(go_utils.MkDir(fullBuildPath))
 
 		progressChan := go_fileutils.CopyRecursive(platform.Extract_build_target, fullBuildPath, platform.BuildCutPath)
-		//copyRecursive(platform.Extract_build_target, fullBuildPath, platform.BuildCutPath)
 
 	copy_runtime:
 		for {
@@ -66,10 +63,13 @@ var buildCommand cobra.Command = cobra.Command{
 
 			switch progress.State {
 			case go_fileutils.STATE_START_FILE:
-				fmt.Println("copy platform: ", progress.CurrentTarget)
+				fmt.Println(go_utils.CLEAR_CMD_LINE_SEQ, "copy platform: ", progress.CurrentTarget)
+
+			case go_fileutils.STATE_COPY:
+				fmt.Print(go_utils.CLEAR_CMD_LINE_SEQ, progress.BytesCopied, " of ", progress.BytesTotal)
 
 			case go_fileutils.STATE_FINISHED:
-				fmt.Println("copy platform: done !!!")
+				fmt.Println(go_utils.CLEAR_CMD_LINE_SEQ, "copy platform: done !!!")
 				break copy_runtime
 
 			case go_fileutils.STATE_ERROR:
@@ -78,9 +78,13 @@ var buildCommand cobra.Command = cobra.Command{
 			}
 		}
 
-		// DONE: rename .zip to .nw
-		// DONE: Put .nw file into build directory
-		zipFile, err := os.Create(fullBuildPath + "app.zip")
+		tmpFileName := os.TempDir() + string(os.PathSeparator) + "nwgoapp_build.zip"
+		err = os.Remove(tmpFileName)
+		if err != nil && !os.IsNotExist(err) {
+			panic(err)
+		}
+
+		zipFile, err := os.Create(tmpFileName)
 		go_utils.Err(err)
 		defer zipFile.Close()
 
@@ -89,23 +93,19 @@ var buildCommand cobra.Command = cobra.Command{
 
 		os.Chmod(fullBasePath+platform.BackendBinary, 0755)
 
-		// DONE:
-		// - backend
 		go_utils.Err(packIntoZip(zipArchive, fullBasePath+platform.BackendBinary, platform.BackendBinary))
-		// - index.html
 		go_utils.Err(packIntoZip(zipArchive, fullBasePath+"index.html", "index.html"))
-		// - package.json
 		go_utils.Err(packIntoZip(zipArchive, fullBasePath+"package.json", "package.json"))
 
 		fmt.Println(go_utils.CLEAR_CMD_LINE_SEQ, "packaging: done!!!")
 
-		zipArchive.Close()
-		zipFile.Close()
+		go_utils.Err(zipArchive.Close())
+
+		zipFile.Seek(0, 0)
 
 		if platform.PostBuild != nil {
 			//DONE: Finalize Platform specific build
-			platform.PostBuild(platform, fullBuildPath)
+			platform.PostBuild(platform, zipFile, fullBuildPath)
 		}
-
 	},
 }
