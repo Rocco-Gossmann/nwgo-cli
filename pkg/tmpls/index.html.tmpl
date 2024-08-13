@@ -7,20 +7,30 @@
 
 		<script type="module">
 
-			const { spawn } = require('node:child_process');
+            if (nw) {
+                if (process.versions["nw-flavor"] == "sdk") {
+                    nw.Window.get().showDevTools();
+                }
 
-			%%BuildPreRunCmd%%
-	
-			const runcmd = spawn('%%BackendBinary%%');
+				const { spawn } = require('node:child_process');
 
-			runcmd.stdout.on("data", (data) => {
-				nw.Window.get().on("close", () => {
-					window.location.href=`http://127.0.0.1:${data}/__stop_server__`
-				} )
-				document.querySelector("#main-frame").src = `http://127.0.0.1:${data}/__start_server__`
-			})
+				%%BuildPreRunCmd%%
+		
+				const runcmd = spawn('%%BackendBinary%%');
 
-			runcmd.stderr.on("data", (data) => console.error(`${data}`) )
+				runcmd.stdout.on("data", (data) => {
+					nw.Window.get().on("close", () => {
+						window.location.href=`http://127.0.0.1:${data}/__stop_server__`
+					} )
+					document.querySelector("#main-frame").src = `http://127.0.0.1:${data}/__start_server__`
+				})
+
+				runcmd.stderr.on("data", (data) => console.error(`${data}`) )
+
+			} else {
+                document.querySelector("#main-frame").src =
+                    `http://127.0.0.1:7001/__start_server__`;
+            }
 
 		</script>
 	</body>
