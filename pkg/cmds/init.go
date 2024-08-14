@@ -43,6 +43,15 @@ func (t *t_TemplateFile) copy(templateFile string, outputFile string) {
 
 }
 
+func (t *t_TemplateFile) copyRaw(templateFile, outputFile string) {
+	var makeFile = strings.Join([]string{t.targetDir, outputFile}, "/")
+	data, err := pkg.Templates.ReadFile(templateFile)
+	go_utils.Err(err)
+
+	err = os.WriteFile(makeFile, data, 0777)
+	go_utils.Err(err)
+}
+
 var initCommand cobra.Command = cobra.Command{
 	Use:   "init [destinationPath]",
 	Short: "initializes a new Project",
@@ -107,6 +116,9 @@ var initCommand cobra.Command = cobra.Command{
 		templateFile.copy("tmpls/go.mod.tmpl", "go.mod")
 		templateFile.copy("tmpls/main.go.tmpl", "main.go")
 		templateFile.copy("tmpls/server.go.tmpl", "goapi/server.go")
+
+		templateFile.copy("tmpls/static_index.html.tmpl", "static/index.html")
+		templateFile.copyRaw("tmpls/logo.png.tmpl", "static/logo.png")
 
 	},
 }

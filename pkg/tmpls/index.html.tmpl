@@ -1,37 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head><title>%%ProjectTitle%%</title></head>
-	<body style="display: block;padding: 0px;margin: 0px">
+    <head>
+        <title>%%ProjectTitle%%</title>
+    </head>
+    <body style="display: block; padding: 0px; margin: 0px">
+        <iframe
+            id="main-frame"
+            style="
+                display: block;
+                position: absolute;
+                inset: 0px;
+                width: 100vw;
+                height: 100vh;
+                border: none;
+            "
+        ></iframe>
 
-		<iframe id="main-frame" style="display: block; position: absolute; inset: 0px; width: 100vw; height:100vh; border: none"></iframe>
+        <script type="module">
+            (async function () {
+                if (nw) {
+                    if (process.versions["nw-flavor"] == "sdk") {
+                        nw.Window.get().showDevTools();
+                        await new Promise((res, rej) =>
+                            window.setTimeout(res, 1000)
+                        );
+                    }
 
-		<script type="module">
+                    const { spawn } = require("node:child_process");
+                    spawn("chmod", ["+x", '%%BackendBinary%%']);
 
-            if (nw) {
-                if (process.versions["nw-flavor"] == "sdk") {
-                    nw.Window.get().showDevTools();
+                    const runcmd = spawn('%%BackendBinary%%');
+
+                    runcmd.stdout.on("data", (data) => {
+                        nw.Window.get().on("close", () => {
+                            window.location.href = `http://127.0.0.1:${data}/__stop_server__`;
+                        });
+                        document.querySelector("#main-frame").src =
+                            `http://127.0.0.1:${data}/__start_server__`;
+                    });
+
+                    runcmd.stderr.on("data", (data) =>
+                        console.error(`${data}`)
+                    );
+
+                } else {
+                    document.querySelector("#main-frame").src =
+                        `http://127.0.0.1:7001/__start_server__`;
                 }
-
-				const { spawn } = require('node:child_process');
-
-				%%BuildPreRunCmd%%
-		
-				const runcmd = spawn('%%BackendBinary%%');
-
-				runcmd.stdout.on("data", (data) => {
-					nw.Window.get().on("close", () => {
-						window.location.href=`http://127.0.0.1:${data}/__stop_server__`
-					} )
-					document.querySelector("#main-frame").src = `http://127.0.0.1:${data}/__start_server__`
-				})
-
-				runcmd.stderr.on("data", (data) => console.error(`${data}`) )
-
-			} else {
-                document.querySelector("#main-frame").src =
-                    `http://127.0.0.1:7001/__start_server__`;
-            }
-
-		</script>
-	</body>
+            })();
+        </script>
+    </body>
 </html>

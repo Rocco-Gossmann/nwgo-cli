@@ -8,11 +8,9 @@ func DefineRoutes(mux *http.ServeMux) {
 	// GET /  -  is the entrypoint to your application it is automatically started
 	// If NWJS has successfully opened a window and started a Server
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(`<!DOCTYPE html>
-			<body>
-				<h1> Hello NWGO - Project </h1>
-			</body>
-		`))
+		// Redirect browser to index page in static folder
+		w.Header().Add("location", "/static/index.html")
+		w.WriteHeader(302)
 	})
 
 }
