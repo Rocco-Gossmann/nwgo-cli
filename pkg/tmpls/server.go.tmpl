@@ -6,11 +6,27 @@ func DefineRoutes(mux *http.ServeMux) {
 	// Define your Go - Server Endpoints here
 	//
 	// GET /  -  is the entrypoint to your application it is automatically started
-	// If NWJS has successfully opened a window and started a Server
+	// If NWJS has successfully opened a window and started the GO portion of the App
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		// Redirect browser to index page in static folder
-		w.Header().Add("location", "/static/index.html")
-		w.WriteHeader(302)
+		http.Redirect(w, r, "/static/index.html", 302)
+	})
+
+	// Just to demonstrate, that AJAX is also Possible
+	mux.HandleFunc("GET /time", func(w http.ResponseWriter, r *http.Request) {
+
+		// Go: Time-Formating strings
+		//	Year: "2006" "06"
+		//	Month: "Jan" "January" "01" "1"
+		//	Day of the week: "Mon" "Monday"
+		//	Day of the month: "2" "_2" "02"
+		//	Day of the year: "__2" "002"
+		//	Hour: "15" "3" "03" (PM or AM)
+		//	Minute: "4" "04"
+		//	Second: "5" "05"
+		//	AM/PM mark: "PM"
+
+		w.Write([]byte(time.Now().Format("_2 Jan. 2006 - 15:04:05")))
+
 	})
 
 }

@@ -1,14 +1,36 @@
 <!DOCTYPE html>
-
 <html lang="en">
         
     <head>
-        <title>Powered by HTMX, Go and NWJS</title>
+        <title>Powered by Go and NWJS</title>
+
+        <script type="text/javascript">
+
+            function updateTime() {
+                fetch("/time")
+                    .then( (res) => res.text() )
+                    .then( data => {
+                        if(data) {
+                            const span = document.getElementById("time_output")
+                            if(!span) return 
+                            span.innerHTML = data
+                        }
+                    })
+            }
+
+            window.addEventListener("load", updateTime)
+
+        </script>
     </head>
+
     <body style="text-align: center">
         <h1>%%ProjectTitle%%</h1>
+
         <img width="25%" src="/static/logo.png" alt="nwgo-logo"/>
         <p>Powered by Go and NWJS</p>  
+
+        <span id="time_output">... fetching current time from Go ...</span>
+        <button onclick="updateTime()">update Time</button>
     </body>
         
 </html>
