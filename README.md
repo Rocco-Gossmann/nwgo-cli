@@ -34,18 +34,19 @@ Run the Install command.
 Sadly Gos `install` does not support changing the target binary name yet, so
 nwgo-cli comes with its own `install` command to compensate for that.
 
-run these commands
+run this command
 
 ```bash
-go mod tidy
 go run . install
 ```
 
+That is it. If everything went well, you should now have the `nwgo` command installed.
+
 ### Do I need to install NW.JS ?
 
-No, you don't. The first time you use the `nwgo run` command, this tool will
+No, you don't. The first time you use the `nwgo run`, `nwgo init` or `nwgo build` command, this tool will
 automatically download the fiting NW.JS Files for your system.
-(Only Mac ARM, Linux x86_64 are are supported at the moment)
+(Only Mac ARM, Linux x86_64 and Windows x86_64 are are supported at the moment)
 
 everything this tool downloads is stored in ~/.local/state/nwgo
 
@@ -74,12 +75,18 @@ This is the Title, that your OS will show as the Window-Title
 
 ```
 [ProjectDirectoryName]
+    │
+    ├── backend
     ├── go.mod
     ├── goapi
     │   └── server.go
     ├── index.html
     ├── main.go
-    └── package.json
+    ├── package.json
+    └── static
+        ├── index.html
+        └── logo.png
+
 ```
 
 5.) Switch into the folder that was created.
