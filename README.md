@@ -1,8 +1,12 @@
+
+<img src="./pkg/tmpls/logo.png" alt="NWGO - Logo" width="25%" style="float: left"/>
+
 # NWGO - CLI
 
 a command-line tool, that is aiming to combine the flexibility of a NW.JS ([https://nwjs.io](https://nwjs.io)) UI
 with the power of a Go based backend and compile everything into one Executable in the End.
 
+<div style="clear: both"></div>
 
 * [Installation](#installation)
 * [Creating a Project](#creating-a-project)
@@ -114,9 +118,11 @@ typing it by itself gives you a help, for what it can do.
 | Command            | Description                                                                                                                 |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------- |
 | `nwgo install`     | Installs the `nwjs` binary into your `$GOPATH/bin`                                                                          |
-| `nwgo init [path]` | creates a new NWJS - Project at the given `[path]`                                                                          |
-| `nwgo run  [path]` | launchens the given NWJS - Project at the given `[path]`                                                                    |
+| `nwgo init  [path]` | creates a new NWJS - Project at the given `[path]`                                                                          |
+| `nwgo run   [path]` | launchens the given NWJS - Project at the given `[path]`                                                                    |
 | `nwgo uninstall`   | Removes everything, that has been downloaded or installed via this tool<br><small>Your Projects will stay untouched</small> |
+
+<!--| `nwgo build [path]` | create a deployment ready package from the given NWJS - Project at the given `[path]`    -->
 
 # Uninstall
 
@@ -157,10 +163,11 @@ Step 2:
 Step 3:
 
 -   ▢ add a `nwgo build [path] [target]` command
--   ▢ download the none SDK version of NWJS
+-   ✅ download the none SDK version of NWJS
 -   ▢ combine the project into a 'nw' file
--   ▢ link the `nw-file` together with the download NWJS to create one application.
+-   ✅ link the `nw-file` together with the download NWJS to create one application.
 
 Step 4
 
--   ▢ fix window-close-detection, when switching to a different domain
+-   ✅ fix window-close-detection, when switching to a different domain
+-   ▢ deployment to none packaged version, for platforms not supported by NWJS
