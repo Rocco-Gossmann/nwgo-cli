@@ -22,8 +22,12 @@ var installCommand cobra.Command = cobra.Command{
 		var platform = pkg.GetPlatformConfig()
 
 		fmt.Println("compiling")
+		_, err = exec.Command("go", "mod", "tidy").Output()
+		go_utils.Err(err)
+
 		_, err = exec.Command("go", "build", "-o", BIN_FILE, ".").Output()
 		go_utils.Err(err)
+
 		_, err = os.Stat(BIN_FILE)
 		go_utils.Err(err)
 
