@@ -167,17 +167,22 @@ var buildCommand cobra.Command = cobra.Command{
 		go_utils.Err(packIntoZip(zipArchive, fullBasePath+"index.html", "index.html"))
 		go_utils.Err(packIntoZip(zipArchive, fullBasePath+"package.json", "package.json"))
 
-		fmt.Println()
-		go_utils.Err(packFolderContent(zipArchive, fullBasePath+"static", "static", func(progress gfu.BatchProgress) {
-			switch progress.State {
-			case gfu.STATE_START_FILE:
-				fmt.Print("packing: ", progress.CurrentTarget)
+		var staticDir = fullBasePath + "static"
+		_, err = os.Stat(staticDir)
 
-			case gfu.STATE_END_FILE:
-				fmt.Println(" => done !!!")
+		if !os.IsNotExist(err) {
+			fmt.Println()
+			go_utils.Err(packFolderContent(zipArchive, staticDir, "static", func(progress gfu.BatchProgress) {
+				switch progress.State {
+				case gfu.STATE_START_FILE:
+					fmt.Print("packing: ", progress.CurrentTarget)
 
-			}
-		}))
+				case gfu.STATE_END_FILE:
+					fmt.Println(" => done !!!")
+
+				}
+			}))
+		}
 
 		fmt.Println(go_utils.CLEAR_CMD_LINE_SEQ, "packaging: done!!!")
 
