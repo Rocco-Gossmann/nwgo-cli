@@ -91,8 +91,8 @@ var initCommand cobra.Command = cobra.Command{
 
 		goPackageName, err := requestPackageName(
 			"Go - Package name",
-			"^[a-z][a-z0-9-_./]*$",
-			"only use a-z 0-9 - _ . and /  first letter must be a-z",
+			"^[a-z][a-zA-Z0-9-_./]*$",
+			"only use a-z A-Z 0-9 - _ . and /  first letter must be a-z",
 		)
 		go_utils.Err(err)
 		templateFile.Replacements["%%GOPackageName%%"] = goPackageName
