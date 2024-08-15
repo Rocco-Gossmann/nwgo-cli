@@ -127,13 +127,12 @@ typing it by itself gives you a help, for what it can do.
 | `nwgo install`     | Installs the `nwjs` binary into your `$GOPATH/bin`                                                                          |
 | `nwgo init  [path]` | creates a new NWJS - Project at the given `[path]`                                                                          |
 | `nwgo run   [path]` | launchens the given NWJS - Project at the given `[path]`                                                                    |
+| `nwgo build [path]` | create a deployment ready package from the given NWJS - Project at the given `[path]`  |
 | `nwgo uninstall`   | Removes everything, that has been downloaded or installed via this tool<br><small>Your Projects will stay untouched</small> |
-
-<!--| `nwgo build [path]` | create a deployment ready package from the given NWJS - Project at the given `[path]`    -->
 
 # Uninstall
 
-## for Mac / Linux 
+## for Mac / Linux
 just call
 ```bash
 nwgo uninstall
@@ -141,7 +140,7 @@ nwgo uninstall
 
 ## for Windows
 please use the provided `uninstall.bat` Batch-Script.
-Windows does not allow a running binary to delete itself, so we need some help from 
+Windows does not allow a running binary to delete itself, so we need some help from
 the native window CMD to truely clean everything.
 
 # Roadmap
@@ -171,7 +170,7 @@ Step 3:
 
 -   ▢ add a `nwgo build [path] [target]` command
 -   ✅ download the none SDK version of NWJS
--   ▢ combine the project into a 'nw' file
+-   ✅ combine the project into a 'nw' file
 -   ✅ link the `nw-file` together with the download NWJS to create one application.
 
 Step 4
