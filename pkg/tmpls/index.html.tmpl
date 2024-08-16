@@ -27,16 +27,25 @@
                     }
 
                     const { spawn } = require("node:child_process");
-                    spawn("chmod", ["+x", '%%BackendBinary%%']);
+                    spawn("chmod", ["+x", './backend']);
 
-                    const runcmd = spawn('%%BackendBinary%%');
+                    const runcmd = spawn('./backend');
 
-                    runcmd.stdout.on("data", (data) => {
+                    var stdOutHandler = (data) => {
+
                         nw.Window.get().on("close", () => {
                             window.location.href = `http://127.0.0.1:${data}/__stop_server__`;
                         });
+
+                        stdOutHandler = (data) => console.log("server says: ", `${data}`)
+
                         document.querySelector("#main-frame").src =
                             `http://127.0.0.1:${data}/__start_server__`;
+
+                    }
+
+                    runcmd.stdout.on("data", (data) => {
+                        stdOutHandler(data);
                     });
 
                     runcmd.stderr.on("data", (data) =>
