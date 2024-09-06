@@ -1,4 +1,3 @@
-
 <img src="./pkg/tmpls/logo.png" alt="NWGO - Logo" width="25%" style="float: left"/>
 
 # NWGO - CLI
@@ -8,11 +7,10 @@ with the power of a Go based backend and compile everything into one Executable 
 
 <div style="clear: both"></div>
 
-* [Installation](#installation)
-* [Creating a Project](#creating-a-project)
-* [Command-Reference](#command-reference)
-* [Roadmap](#roadmap)
-
+-   [Installation](#installation)
+-   [Creating a Project](#creating-a-project)
+-   [Command-Reference](#command-reference)
+-   [Roadmap](#roadmap)
 
 # Installation
 
@@ -68,7 +66,7 @@ an example would be `github.com/your-account/your-project-directory`
 4.) last, you'll be asked for an Application Title.
 This is the Title, that your OS will show as the Window-Title
 
-> [!info]
+> [!note]
 > both inputs give you rules on what characters are allowed in the respective names
 
 5.) if everything fits, you should now have a Folder, containing the following structure
@@ -101,13 +99,13 @@ cd [ProjectDirectoryName]
 nwgo run .
 ```
 
-> [!info]
+> [!note]
 > The first time you run this command, it will download and set up the NWJS-SDK-For your Platform.
 > This may take a while, depending on your Download speed.
 
 7.) your Project will live in the `goapi` folder.
 You define all your Backend-Routes in `goapi/server.go`.
-The Entry Point for your Application is the `GET /` Route. There shoudl already
+The Entry Point for your Application is the `GET /` Route. There should already
 be an example created for you.
 
 # Command-Reference
@@ -122,23 +120,26 @@ command.
 
 typing it by itself gives you a help, for what it can do.
 
-| Command            | Description                                                                                                                 |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| `nwgo install`     | Installs the `nwjs` binary into your `$GOPATH/bin`                                                                          |
+| Command             | Description                                                                                                                 |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `nwgo install`      | Installs the `nwjs` binary into your `$GOPATH/bin`                                                                          |
 | `nwgo init  [path]` | creates a new NWJS - Project at the given `[path]`                                                                          |
 | `nwgo run   [path]` | launchens the given NWJS - Project at the given `[path]`                                                                    |
-| `nwgo build [path]` | create a deployment ready package from the given NWJS - Project at the given `[path]`  |
-| `nwgo uninstall`   | Removes everything, that has been downloaded or installed via this tool<br><small>Your Projects will stay untouched</small> |
+| `nwgo build [path]` | create a deployment ready package from the given NWJS - Project at the given `[path]`                                       |
+| `nwgo uninstall`    | Removes everything, that has been downloaded or installed via this tool<br><small>Your Projects will stay untouched</small> |
 
 # Uninstall
 
 ## for Mac / Linux
+
 just call
+
 ```bash
 nwgo uninstall
 ```
 
 ## for Windows
+
 please use the provided `uninstall.bat` Batch-Script.
 Windows does not allow a running binary to delete itself, so we need some help from
 the native window CMD to truely clean everything.
