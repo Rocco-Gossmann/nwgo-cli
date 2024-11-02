@@ -19,20 +19,22 @@
         <script type="module">
             (async function () {
                 if (nw) {
+                    const { spawn } = require("node:child_process");
+
                     if (process.versions["nw-flavor"] == "sdk") {
                         nw.Window.get().showDevTools();
-                        await new Promise((res, rej) =>
-                            window.setTimeout(res, 1000)
-                        );
+                        await new Promise((res, rej) => window.setTimeout(res, 1000));
                     }
 
-                    const { spawn } = require("node:child_process");
-                    spawn("chmod", ["+x", './backend']);
-
-                    const runcmd = spawn('./backend');
+                    function doCMD( cmd, args = [], onEnd = (code) => {}, onStdOut = (d) => console.log(`${d}`), onStdErr = (d) => console.error(`${d}`)) {
+                        const c = spawn(cmd, args)
+                        c.on('error', (err) => console.error(`cmd-error: ${cmd} => ${err}`))
+                        c.stdout.on('data', onStdOut)
+                        c.stderr.on('data', onStdErr)
+                        c.on('close', onEnd)
+                    }
 
                     var stdOutHandler = (data) => {
-
                         nw.Window.get().on("close", () => {
                             window.location.href = `http://127.0.0.1:${data}/__stop_server__`;
                         });
@@ -41,16 +43,20 @@
 
                         document.querySelector("#main-frame").src =
                             `http://127.0.0.1:${data}/__start_server__`;
-
                     }
 
-                    runcmd.stdout.on("data", (data) => {
-                        stdOutHandler(data);
-                    });
-
-                    runcmd.stderr.on("data", (data) =>
-                        console.error(`${data}`)
-                    );
+                    doCMD('chmod', ['a+x', './backend'], 
+                        (code) => {
+                            if (code == 0) {
+                                doCMD(
+                                    './backend', [], () => {},
+                                    (data) => stdOutHandler(data)
+                                 )
+                            } else alert(
+                                `failed run backend. Could not set permission (code: ${code})`
+                            ) 
+                        }
+                    )
 
                 } else {
                     document.querySelector("#main-frame").src =
