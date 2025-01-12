@@ -33,3 +33,10 @@ func DefineRoutes(mux *http.ServeMux) {
 	})
 
 }
+
+func OnShutdown() {
+	// This function is called, before the backend shuts down completely
+	// You may use it to save any persistent date, close open connections
+	// etc. ...
+
+}

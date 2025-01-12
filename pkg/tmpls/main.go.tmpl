@@ -6,6 +6,8 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"%%GOPackageName%%/goapi"
@@ -39,6 +41,19 @@ func buildAddr() int {
 }
 
 func main() {
+
+	// Listen for Kill Signal from OS
+	var killchannel = make(chan os.Signal, 1)
+	signal.Notify(killchannel, syscall.SIGTERM)
+
+	go func() {
+		<-killchannel
+		if server != nil {
+			server.Shutdown(nil)
+		}
+	}()
+
+	defer goapi.OnShutdown()
 
 	mux := http.NewServeMux()
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
